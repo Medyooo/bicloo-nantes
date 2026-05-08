@@ -9,18 +9,20 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "mocha tests/**/*.test.js --recursive",
+    "test": "mocha --require dotenv/config tests/**/*.test.js --recursive",
     "test:watch": "mocha tests/**/*.test.js --recursive --watch"
   },
   "keywords": [],
   "author": "Mohamed Larbi EL BAIDI",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@hapi/hapi": "^21.4.9",
+    "dotenv": "^17.4.2",
     "joi": "^18.2.1",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "process": "^0.11.10"
   },
   "devDependencies": {
     "chai": "^6.2.2",

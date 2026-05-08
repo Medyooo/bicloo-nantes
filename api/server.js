@@ -1,11 +1,11 @@
-'use strict';
+import Hapi from '@hapi/hapi';
+import process from "process";
+import {stationsRouter} from "./lib/application/stations/router.js";
 
-const Hapi = require('@hapi/hapi');
-
-const createServer = async function (){
-    const server = new Hapi.Server({
-        port: 3000,
-        host: 'localhost',
+const createServer = async () => {
+    const server = Hapi.server({
+        port: process.env.PORT || 3000,
+        host: process.env.HOST || 'localhost',
         routes: {
             cors: {
                 origin: ['*'],
@@ -16,23 +16,12 @@ const createServer = async function (){
     server.route({
         method: 'GET',
         path: '/health',
-        handler: function () {
-            return{ status: 200 };
-        },
+        handler: () => ({ status: 'ok' }),
     });
 
+    await server.register(stationsRouter);
+
     return server;
 };
 
-const startServer = async function(){
-    const server = await createServer();
-    await server.start();
-    console.log('Serveur démarré sur ${server.info.uri}`');
-    return server;
-};
-
-module.exports = {startServer, createServer};
-
-if (require.main === module) {
-    startServer();
-}
+export { createServer };
