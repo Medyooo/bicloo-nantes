@@ -23,11 +23,11 @@ describe('BiclooApi', function() {
 
             const stations = await getStations();
 
-            expect(stations).to.be.an('array');
-            expect(stations[0].name).to.equal('Commerce');
-            expect(stations[0].availableBikes).to.equal(8);
-            expect(stations[0].availablePlaces).to.equal(4);
-            expect(stations[0].isOpen).to.equal(true);
+            expect(stations.data).to.be.an('array');
+            expect(stations.data[0].attributes.name).to.equal('Commerce');
+            expect(stations.data[0].attributes.availableBikes).to.equal(8);
+            expect(stations.data[0].attributes.availablePlaces).to.equal(4);
+            expect(stations.data[0].attributes.isOpen).to.equal(true);
         });
 
         it('lance une erreur si l\'API est indisponible', async function() {
@@ -54,8 +54,8 @@ describe('BiclooApi', function() {
 
             const stations = await getStations();
 
-            expect(stations).to.be.an('array');
-            expect(stations).to.have.length(0);
+            expect(stations.data).to.be.an('array');
+            expect(stations.data).to.have.length(0);
         });
 
         it('formate correctement une station fermée', async function() {
@@ -66,7 +66,7 @@ describe('BiclooApi', function() {
 
             const stations = await getStations();
 
-            expect(stations[0].isOpen).to.equal(false);
+            expect(stations.data[0].attributes.isOpen).to.equal(false);
         });
 
         it('formate correctement le nom en title case', async function() {
@@ -79,7 +79,7 @@ describe('BiclooApi', function() {
 
             const stations = await getStations();
 
-            expect(stations[0].name).to.equal('Gare sncf');
+            expect(stations.data[0].attributes.name).to.equal('Gare sncf');
         });
 
     });

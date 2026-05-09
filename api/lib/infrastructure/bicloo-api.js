@@ -22,6 +22,19 @@ function formatStation(record) {
     };
 }
 
+function serializeStation(station) {
+    return {
+        id: String(station.id),
+        type: 'station',
+        attributes: {
+            name: station.name,
+            availableBikes: station.availableBikes,
+            availablePlaces: station.availablePlaces,
+            isOpen: station.isOpen,
+        },
+    };
+}
+
 async function fetchStations() {
     const response = await fetch(`${API_URL}?limit=${STATION_LIMIT}`);
 
@@ -34,17 +47,20 @@ async function fetchStations() {
 
 export async function getStations() {
     const data = await fetchStations();
-        return data.results.map(formatStation);
+    const stations = data.results.map(formatStation);
+    return {
+        data : stations.map(serializeStation),
+    };
 }
 
 export async function getStationById(id) {
-    const stations = await getStations();
-    const station = stations.find((station) => station.id === id);
+    const result = await getStations();
+    const station = result.data.find((station) => station.id === String(id));
 
     if (!station) {
         throw Boom.notFound(messages.errors.station.notFound(id));
     }
 
-    return station;
+    return { data: station };
 }
 
