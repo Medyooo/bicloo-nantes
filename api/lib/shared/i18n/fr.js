@@ -3,6 +3,9 @@ export const messages = {
         api: {
             unavailable: (status) => `Erreur API Bicloo : ${status}`,
             invalidUrl: 'URL de l\'API invalide',
+            missingUrl: 'Variable d\'environnement BICLOO_API_URL non définie',
+            networkFailure: 'Impossible de joindre l\'API Open Data (réseau ou URL).',
+            invalidPayload: 'Réponse de l\'API Open Data invalide ou incomplète.',
         },
         station: {
             notFound: (id) => `Station ${id} introuvable`,

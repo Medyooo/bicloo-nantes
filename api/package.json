@@ -2,13 +2,13 @@
   "name": "api",
   "version": "1.0.0",
   "description": "API Bicloo Nantes",
-  "main": "server.js",
+  "main": "index.js",
   "directories": {
     "lib": "lib",
     "test": "tests"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node index.js",
     "test": "mocha --require dotenv/config tests/**/*.test.js --recursive",
     "test:watch": "mocha tests/**/*.test.js --recursive --watch"
   },

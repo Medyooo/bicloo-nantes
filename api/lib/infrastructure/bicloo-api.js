@@ -1,9 +1,7 @@
 import fetch from 'node-fetch';
 import process from 'process';
-import { messages } from "../shared/i18n/fr.js";
-import Boom from "@hapi/boom";
-
-
+import { messages } from '../shared/i18n/fr.js';
+import Boom from '@hapi/boom';
 
 const API_URL = process.env.BICLOO_API_URL;
 const STATION_LIMIT = 100;
@@ -13,25 +11,30 @@ function formatName(name) {
 }
 
 function formatStation(record) {
+    const availableBikes = Number(record.available_bikes) || 0;
+    const availableBikeStands = Number(record.available_bike_stands) || 0;
+
     return {
-        id: record.number,
-        name: formatName(record.name),
-        availableBikes: record.available_bikes,
-        availablePlaces: record.available_bike_stands,
-        isOpen: record.status === 'OPEN',
+        id: String(record.number),
+        attributes: {
+            lastUpdate: record.last_update ?? null,
+            name: formatName(record.name),
+            address: record.address ?? null,
+            availableBikes,
+            availableBikeStands,
+            bikeStands: Number(record.bike_stands) || 0,
+            rentalMethods: record.rental_methods ?? null,
+            position: record.position ?? null,
+            isOpen: availableBikes > 0 || availableBikeStands > 0,
+        },
     };
 }
 
 function serializeStation(station) {
     return {
-        id: String(station.id),
+        id: station.id,
         type: 'station',
-        attributes: {
-            name: station.name,
-            availableBikes: station.availableBikes,
-            availablePlaces: station.availablePlaces,
-            isOpen: station.isOpen,
-        },
+        attributes: station.attributes,
     };
 }
 
@@ -39,7 +42,9 @@ async function fetchStations() {
     const response = await fetch(`${API_URL}?limit=${STATION_LIMIT}`);
 
     if (!response.ok) {
-        throw Boom.serverUnavailable(messages.errors.api.unavailable(response.status));
+        throw Boom.serverUnavailable(
+            messages.errors.api.unavailable(response.status)
+        );
     }
 
     return response.json();
@@ -47,10 +52,11 @@ async function fetchStations() {
 
 export async function getStations() {
     const data = await fetchStations();
-    const stations = data.results.map(formatStation);
-    return {
-        data : stations.map(serializeStation),
-    };
+    const stations = data.results
+        .filter((record) => record.name && record.number)
+        .map(formatStation);
+
+    return { data: stations.map(serializeStation) };
 }
 
 export async function getStationById(id) {
@@ -63,4 +69,3 @@ export async function getStationById(id) {
 
     return { data: station };
 }
-

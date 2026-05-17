@@ -1,0 +1,581 @@
+// ---------------------------------------------------------------------------
+// Variables
+// ---------------------------------------------------------------------------
+$color-primary: #0a5c36;
+$color-primary-bar-end: #11854f;
+$color-primary-muted: #eaf3de;
+$color-danger: #a32d2d;
+$color-danger-muted: #fcebeb;
+$color-text: #1a1a1a;
+$color-text-secondary: #666666;
+$color-border: #e0e0e0;
+$color-background: #f5f5f5;
+$color-white: #ffffff;
+
+$radius-card: 0.75rem;
+$radius-chip: 999px;
+$shadow-card-hover: 0 0.35rem 1rem rgba(0, 0, 0, 0.08);
+
+$breakpoint-wide-header: 68rem;
+
+// ---------------------------------------------------------------------------
+// Base
+// ---------------------------------------------------------------------------
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Arial,
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: $color-text;
+  background: $color-background;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input,
+textarea,
+[contenteditable='true'] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.ui-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Liste — shell plein écran (desktop)
+// ---------------------------------------------------------------------------
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $color-background;
+}
+
+.app-header {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: $color-primary;
+  color: $color-white;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.12);
+
+  @media (min-width: $breakpoint-wide-header) {
+    grid-template-columns: minmax(10rem, 14rem) minmax(12rem, 1fr) auto;
+    gap: 1.5rem;
+    padding: 1.25rem 2rem;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    line-height: 1;
+    color: inherit;
+  }
+
+  &__title {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-chip;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    color: inherit;
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: $color-white;
+    font-size: 0.95rem;
+    outline: none;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.65);
+    }
+  }
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-chip {
+  padding: 0.4rem 0.85rem;
+  border-radius: $radius-chip;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &--active {
+    background: $color-white;
+    color: $color-primary;
+    border-color: $color-white;
+  }
+}
+
+.stations-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 1.25rem 1.5rem 2rem;
+
+  @media (min-width: $breakpoint-wide-header) {
+    padding: 1.5rem 2rem 2.5rem;
+  }
+}
+
+.stations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 20rem));
+  gap: 1rem;
+  justify-content: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    min-width: 0;
+  }
+}
+
+.stations-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: $color-text-secondary;
+  font-size: 0.95rem;
+}
+
+// ---------------------------------------------------------------------------
+// Carte station
+// ---------------------------------------------------------------------------
+.station-card {
+  height: 100%;
+  min-height: 9rem;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-card;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    box-shadow: $shadow-card-hover;
+    transform: translateY(-1px);
+  }
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    padding: 1.15rem 1.25rem;
+    color: inherit;
+    border-radius: inherit;
+  }
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  &__titles {
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
+  &__address {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    color: $color-text-secondary;
+    line-height: 1.35;
+  }
+
+  &__stats {
+    display: flex;
+    align-items: stretch;
+    gap: 1rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid $color-border;
+  }
+}
+
+.station-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+
+  &__icon {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: $color-primary-muted;
+    flex-shrink: 0;
+    color: $color-primary;
+
+    .ui-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    &--p {
+      background: $color-primary-muted;
+      color: $color-primary;
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.15;
+    min-width: 0;
+  }
+
+  &__num {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: $color-primary;
+    letter-spacing: -0.02em;
+  }
+
+  &__unit {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $color-text-secondary;
+  }
+}
+
+.badge {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: $radius-chip;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &--open {
+    background: $color-primary-muted;
+    color: $color-primary;
+  }
+
+  &--closed {
+    background: $color-danger-muted;
+    color: $color-danger;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Détail station
+// ---------------------------------------------------------------------------
+.detail-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $color-background;
+}
+
+.detail-hero {
+  background: $color-primary;
+  color: $color-white;
+  padding: 1rem 1.5rem 1.75rem;
+
+  &__nav {
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  &__subtitle {
+    margin: 0.5rem 0 0;
+    font-size: 0.95rem;
+    opacity: 0.88;
+    line-height: 1.35;
+  }
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+
+  &__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.detail-body {
+  flex: 1;
+  margin-top: 0.75rem;
+  padding: 0 1.25rem 2rem;
+  border-radius: $radius-card $radius-card 0 0;
+  background: $color-background;
+}
+
+.detail-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.quick-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1rem 0.75rem;
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-card;
+  text-align: center;
+  min-height: 6.5rem;
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: $color-primary;
+
+    .ui-icon {
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    &--p {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      background: $color-primary-muted;
+      color: $color-primary;
+
+      .ui-icon {
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+    }
+
+    &--ok {
+      color: $color-primary;
+    }
+
+    &--bad {
+      color: $color-danger;
+    }
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $color-primary;
+    line-height: 1.1;
+
+    &--open {
+      font-size: 1rem;
+      color: $color-primary;
+    }
+
+    &--closed {
+      font-size: 1rem;
+      color: $color-danger;
+    }
+  }
+
+  &__label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $color-text-secondary;
+  }
+
+  &--status {
+    .quick-stat-card__value {
+      margin-top: 0.15rem;
+    }
+  }
+}
+
+.detail-capacity {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-card;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1rem;
+
+  &__label {
+    margin: 0 0 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: $color-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__hint {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    color: $color-text-secondary;
+  }
+}
+
+.capacity-bar {
+  height: 0.5rem;
+  border-radius: $radius-chip;
+  background: $color-background;
+  overflow: hidden;
+
+  &__fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, $color-primary, $color-primary-bar-end);
+    transition: width 0.25s ease;
+  }
+}
+
+.detail-info-card {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius-card;
+  padding: 1rem 1.25rem;
+}
+
+.detail-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: $color-text;
+
+  & + & {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid $color-border;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 0.85;
+    font-size: 1.05rem;
+    color: $color-text-secondary;
+
+    .ui-icon {
+      width: 1em;
+      height: 1em;
+    }
+  }
+}
